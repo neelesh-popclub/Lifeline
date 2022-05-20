@@ -1,0 +1,11 @@
+Node and Npm Choice Enabeling
+ Al node modules are installed in  /home/neal/node_modules/   
+node version check==> npm -v
+
+Node use n as a manager to list all installed node and npm versions
+To install n ====>  npm install -g n
+To install stable versionof node===> n stable
+ 
+To open n the command is =======> sudo n (Make choice here and enter)
+To install choice of node=======>  sudo n 14
+Then check the version of node and npm 
