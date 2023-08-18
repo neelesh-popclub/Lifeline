@@ -36,6 +36,9 @@ Copy the existing certs back into the tmpfs mount
 Copy the new certificate, the cert file should be named in the hash.0 format.
 * mv /path/to/cert/hash.0 /system/etc/security/cacerts/
 
+
+https://pswalia2u.medium.com/install-burpsuites-or-any-ca-certificate-to-system-store-in-android-10-and-11-38e508a5541a
+
 Update the perms & selinux context labels, so everything is as readable as before.
 * chown root:root /system/etc/security/cacerts/*
 chmod 644 /system/etc/security/cacerts/*
