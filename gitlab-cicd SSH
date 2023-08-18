@@ -1,0 +1,64 @@
+ssh connection in cicd     
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: ubuntu:latest
+  before_script:
+    - apt-get update && apt-get install -y openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan <server-ip-or-hostname> >> ~/.ssh/known_hosts
+  script:
+    - scp -r <local-file-path> <username>@<server-ip-or-hostname>:<remote-directory-path>
+
+
+
+with rsync
+===================
+
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: alpine
+  before_script:
+    - apk update && apk add openssh-client rsync
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H <server-ip-or-hostname> >> ~/.ssh/known_hosts
+  script:
+    - rsync -e "ssh -o StrictHostKeyChecking=no" -r <local-files-or-directory> <username>@<server-ip-or-hostname>:<remote-directory-path>
+
+=============================
+Normal ssh connection 
+
+
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: ubuntu:latest
+  before_script:
+    - apt-get update && apt-get install -y openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan <server-ip-or-hostname> >> ~/.ssh/known_hosts
+  script:
+    - ssh <username>@<server-ip-or-hostname> "<command-to-execute-on-server>"
+
+
+
+
+Gitlab ci cloning method
+
+variables:
+  GIT_STRATEGY: clone
