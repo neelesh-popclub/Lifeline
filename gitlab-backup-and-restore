@@ -1,0 +1,16 @@
+CReate Gitlab backup(gitlab is made on ruby)
+
+gitlab-rake gitlab:backup:create
+
+backup will be located at /var/opt/gitlab/backups 
+with the date and time in tar file
+
+Restore Gitlab backup
+first stop 
+gitlab-ctl stop unicron
+gitlab-ctl stop sidkiq
+gitlab-ctl stop
+
+then 
+
+gitlab-rake gitlab:backup:restore BACKUP= tar file name
