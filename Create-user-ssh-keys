@@ -1,0 +1,15 @@
+Create user and add ssh keys 
+
+mkdir -p /home/{user-directory}/.ssh
+
+touch /home/{user}/.ssh/authorized_keys
+
+useradd -d /home/{user-directory} {user}
+
+usermod -aG sudo {user}   >>>> if needed sudo
+
+chown -R {user}:{user}  /home/{user-directory}
+
+chmod 700 /home/{user-directory}/.ssh
+
+chmod 644 /home/{user-dir}/.ssh/authorized_keys
