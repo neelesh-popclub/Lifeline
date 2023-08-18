@@ -1,4 +1,4 @@
-Virtual host configuration of Apache2 for proxy (Not breaking pages)
+Virtual host configuration of Apache2 for proxy (follow pages)
 
 <VirtualHost *:443>
     ServerName jenkins.*.org
