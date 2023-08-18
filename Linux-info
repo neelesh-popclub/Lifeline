@@ -1,0 +1,22 @@
+To check full system information
+sudo dmidecode -q
+======================================
+To check disk space
+df -h
+======================================
+To check folder and file size 
+du -sh abc.sh
+or
+du -sh *
+=======================================
+
+To check Ram
+free
+
+=======================================
+To check i/o info
+iostat
+========================================
+To check CPU info 
+lscpu
+=========================================
