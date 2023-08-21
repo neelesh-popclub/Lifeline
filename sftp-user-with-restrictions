@@ -1,0 +1,22 @@
+sudo adduser sftp_user
+
+sudo mkdir -p /var/sftp/myfolder/data/
+chown root:root /var/sftp/myfolder
+chmod 755 /var/sftp/myfolder
+sudo chown sftp_user:sftp_user /var/sftp/myfolder/data/
+
+sudo nano /etc/ssh/sshd_config
+
+Port <your_port_number>
+Match User sftp_user
+ForceCommand internal-sftp
+PasswordAuthentication yes
+ChrootDirectory /var/sftp/myfolder
+PermitTunnel no
+AllowAgentForwarding no
+AllowTcpForwarding no
+X11Forwarding no
+
+
+
+sudo systemctl restart sshd
