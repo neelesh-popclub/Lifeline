@@ -6,6 +6,8 @@ chmod 755 /var/sftp/myfolder
 sudo chown sftp_user:sftp_user /var/sftp/myfolder/data/
 
 sudo nano /etc/ssh/sshd_config
+(then add the above code in sshd config file to reflect restrictions)
+
 
 Port <your_port_number>
 Match User sftp_user
