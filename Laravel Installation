@@ -1,0 +1,59 @@
+sudo apt update
+
+sudo apt install apache2
+
+sudo apt install mysql-server
+
+CREATE DATABASE my_laravel_db;
+CREATE USER 'my_laravel_user'@'localhost' IDENTIFIED BY 'password1234';
+
+sudo apt install php libapache2-mod-php php-mbstring php-cli php-bcmath php-json php-xml php-zip php-pdo php-common php-tokenizer php-mysql
+
+sudo apt install php-mbstring php-xml php-bcmath php-curl
+
+
+ curl -sS https://getcomposer.org/installer | php
+
+sudo mv composer.phar /usr/local/bin/composer
+
+sudo chmod +x /usr/local/bin/composer
+composer --version
+
+cd /var/www/html
+
+sudo composer create-project laravel/laravel laravelapp
+
+sudo chown -R www-data:www-data /var/www/html/laravelapp
+
+sudo chmod -R 775 /var/www/html/laravelapp/storage
+
+
+Vhost for apache2
+============================
+
+<VirtualHost *:80>
+    ServerAdmin webmaster@your-domain.com
+    DocumentRoot /var/www/html/your-project-name/public
+
+    ServerName your-domain.com
+    ServerAlias www.your-domain.com
+
+    <Directory /var/www/html/your-project-name>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+
+=================================================================
+
+for migrations >>
+
+php artisan migrate:status
+
+php artisan migrate
+===========================================================
