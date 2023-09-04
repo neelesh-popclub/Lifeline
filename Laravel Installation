@@ -7,7 +7,7 @@ sudo apt install mysql-server
 CREATE DATABASE my_laravel_db;
 CREATE USER 'my_laravel_user'@'localhost' IDENTIFIED BY 'password1234';
 ALTER USER 'my_laravel_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcde';
-
+GRANT ALL PRIVILEGES ON my_laravel_db.* TO 'my_laravel_user'@'localhost';
 
 sudo apt install php libapache2-mod-php php-mbstring php-cli php-bcmath php-json php-xml php-zip php-pdo php-common php-tokenizer php-mysql
 
