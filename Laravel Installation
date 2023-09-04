@@ -59,3 +59,7 @@ php artisan migrate:status
 
 php artisan migrate
 ===========================================================
+# this command will audit all the packages and give any vulneravilities if any
+composer audit
+
+
