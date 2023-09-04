@@ -5,7 +5,10 @@ mkdir -p /home/{user-directory}/.ssh
 touch /home/{user}/.ssh/authorized_keys
 
 useradd -d /home/{user-directory} {user}
-
+==============================
+sudo adduser deployer      # Fill in user info and password
+sudo usermod -g www-data deployer # Assign group www-data(primary)
+===============================
 usermod -aG sudo {user}   >>>> if needed sudo
 
 chown -R {user}:{user}  /home/{user-directory}
