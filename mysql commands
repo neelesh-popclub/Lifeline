@@ -11,7 +11,7 @@ mysqldump -u root -p database-name > database-name.sql
 =============================================================================
 mysql  -h abcd.cbvegn6fyis3.us-east-1.rds.amazonaws.com -P 3306   -u root -p
 
-GRANT ALL PRIVILEGES ON `log`.* TO 'admin'@'%'IDENTIFIED BY '999?' ;
+GRANT ALL PRIVILEGES ON `log`.* TO 'admin'@'%'IDENTIFIED BY '9s?' ;
 FLUSH PRIVILEGES;
 
 
@@ -22,9 +22,9 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '999?';
 
 CREATE USER 'neel'@'%' IDENTIFIED BY '999?';
 
-grant all privileges on *.* to neel@localhost identified by '#$#6drQ' with grant option;
+grant all privileges on *.* to neel@localhost identified by '#$#Q' with grant option;
 
-GRANT ALL PRIVILEGES ON demo.* TO 'admin'@'%' IDENTIFIED BY '#$#6drQ';
+GRANT ALL PRIVILEGES ON demo.* TO 'admin'@'%' IDENTIFIED BY '#$#Q';
 select user,host from mysql.user;
 
 
