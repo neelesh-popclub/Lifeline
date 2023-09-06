@@ -1,7 +1,12 @@
 CREATE DATABASE dbname;
 use databasename;
 show tables;
+sescribe table-name;
 DROP DATABASE [IF EXISTS] database_name;
+
+
+
+
 mysql -u root -h abcd.us-east-1.rds.amazonaws.com -p  demo < benparker.sql
 
 =============================================================================
