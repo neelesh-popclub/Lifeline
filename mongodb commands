@@ -1,0 +1,25 @@
+Create master user useradmin
+db.createUser(
+  {
+    user: "mongodb",
+    pwd: "4H",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  }
+)
+
+Create databse after logging with admin user 
+
+use new-database
+## this will create a new database and will switch to the user base then run below command to create a user an give permission to that database
+
+db.createUser({
+  user: "m",
+  pwd: "45",
+  roles: [
+    { role: "readWrite", db: "office" },
+    { role: "dbAdmin", db: "office" },
+  ],
+})
+
+
+
