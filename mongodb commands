@@ -7,6 +7,18 @@ db.createUser(
   }
 )
 
+create root user>>> use admin then run below
+
+db.createUser({
+  user: "yourRootUsername",
+  pwd: "yourRootPassword",
+  roles: ["root"]
+})
+
+
+
+
+
 Create databse after logging with admin user 
 
 use new-database
