@@ -15,6 +15,9 @@ db.createUser({
   roles: ["root"]
 })
 
+#######
+for listing users>>>>>       db.getUsers()
+
 
 
 
