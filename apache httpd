@@ -1,1 +1,4 @@
 sudo find /opt/bitnami -type f -name 'httpd' -print
+
+
+sudo /opt/bitnami/apache2/bin/httpd -t -D DUMP_INCLUDES
