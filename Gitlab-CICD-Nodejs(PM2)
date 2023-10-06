@@ -1,0 +1,102 @@
+stages:
+  - dependencies-dev-gf-api
+  - dependencies-stage-gf-api
+  - deploy-gf-api
+  - deploy-gf-stage-api
+ 
+
+install_dependencies-dev-Api:
+  image: node:18.17
+  stage: dependencies-dev-gf-api
+  script:
+    - npm install
+  only:
+    - development  
+  tags:
+    - gitlab-runner-gfmlm  
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules    
+
+
+
+install_dependencies-stage-Api:
+  image: node:18.17
+  stage: dependencies-stage-gf-api
+  script:
+    - npm install
+  only:
+    - staging  
+  tags:
+    - gitlab-runner-gfmlm  
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules   
+
+Deploy_Api:
+  image: node:18.17
+  stage: deploy-gf-api
+  only:
+    - development
+  before_script:
+    - apt-get update && apt-get install -y openssh-client
+    - apt-get install -y rsync
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY_DEV_API" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan $HOSTNAME_DEV_API >> ~/.ssh/known_hosts
+  script:
+      - ls 
+      - ssh $USERNAME@$HOSTNAME_DEV_API "sudo pm2 list"
+      - rsync -e "ssh -o StrictHostKeyChecking=no" -r $CI_PROJECT_DIR/* $USERNAME@$HOSTNAME_DEV_API:/var/www/html/gf-api/
+      - ssh $USERNAME@$HOSTNAME_DEV_API "sudo pm2 restart 1 && sudo pm2 save"
+    
+
+  tags:
+    - gitlab-runner-gfmlm
+   
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules
+    policy: pull 
+
+
+
+Deploy_stage_Api:
+  image: node:18.17
+  stage: deploy-gf-stage-api
+  only:
+    - staging
+  before_script:
+    - apt-get update && apt-get install -y openssh-client
+    - apt-get install -y rsync
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY_DEV_API" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan $HOSTNAME_STAGE_API >> ~/.ssh/known_hosts
+  script:
+      - ls 
+      - ssh $USERNAME@$HOSTNAME_STAGE_API "sudo pm2 list"
+      - rsync -e "ssh -o StrictHostKeyChecking=no" -r $CI_PROJECT_DIR/* $USERNAME@$HOSTNAME_STAGE_API:/var/www/html/gf-api/
+      - ssh $USERNAME@$HOSTNAME_STAGE_API "sudo pm2 restart 1 && sudo pm2 save"
+    
+
+  tags:
+    - gitlab-runner-gfmlm
+   
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules
+    policy: pull     
