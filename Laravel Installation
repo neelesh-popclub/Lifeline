@@ -71,8 +71,8 @@ Vhost with ssl
     ServerAdmin webmaster@your-domain.com
     DocumentRoot /var/www/html/main-file/public/
 
-    ServerName helpdesk.gofastmlm.com
-    ServerAlias www.helpdesk.gofastmlm.com
+    ServerName helpdesk.com
+    ServerAlias www.helpdesk.com
 
     <Directory /var/www/html/main-file>
         Options Indexes FollowSymLinks
@@ -88,8 +88,8 @@ Vhost with ssl
     ServerAdmin webmaster@your-domain.com
     DocumentRoot /var/www/html/main-file/public/
 
-    ServerName helpdesk.gofastmlm.com
-    ServerAlias www.helpdesk.gofastmlm.com
+    ServerName helpdesk..com
+    ServerAlias www.helpdesk.com
 
     SSLEngine on
     SSLCertificateFile /etc/apache2/ssl/ticketgo.pem
