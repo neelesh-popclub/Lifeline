@@ -63,3 +63,46 @@ php artisan migrate
 composer audit
 
 
+
+Vhost with ssl
+
+==========================
+<VirtualHost *:80>
+    ServerAdmin webmaster@your-domain.com
+    DocumentRoot /var/www/html/main-file/public/
+
+    ServerName helpdesk.gofastmlm.com
+    ServerAlias www.helpdesk.gofastmlm.com
+
+    <Directory /var/www/html/main-file>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerAdmin webmaster@your-domain.com
+    DocumentRoot /var/www/html/main-file/public/
+
+    ServerName helpdesk.gofastmlm.com
+    ServerAlias www.helpdesk.gofastmlm.com
+
+    SSLEngine on
+    SSLCertificateFile /etc/apache2/ssl/ticketgo.pem
+    SSLCertificateKeyFile /etc/apache2/ssl/ticketgo-key.pem
+
+    <Directory /var/www/html/main-file>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+
