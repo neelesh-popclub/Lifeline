@@ -31,13 +31,13 @@ eksctl utils associate-iam-oidc-provider \
 
 eksctl create nodegroup --cluster=stage \
                         --region=ap-south-1 \
-                        --name=pop-stage-nodegrp \
+                        --name=test-stage-nodegrp \
                         --node-type=t3a.large \
                         --nodes-min=2 \
                         --nodes-max=6 \
                         --node-volume-size=40 \
                         --ssh-access \
-                        --ssh-public-key=pvt-k8s-access \
+                        --ssh-public-key=test-k8s-access \
                         --managed \
                         --asg-access \
                         --external-dns-access \
@@ -49,13 +49,13 @@ eksctl create nodegroup --cluster=stage \
 
 eksctl create nodegroup --cluster=prod \
                         --region=ap-south-1 \
-                        --name=pop-prod-nodegroup-private \
+                        --name=test-prod-nodegroup-private \
                         --node-type=t3a.xlarge \
                         --nodes-min=1 \
                         --nodes-max=9 \
                         --node-volume-size=50 \
                         --ssh-access \
-                        --ssh-public-key=pvt-k8s-prod-access \
+                        --ssh-public-key=test-k8s-prod-access \
                         --managed \
                         --asg-access \
                         --external-dns-access \
@@ -132,7 +132,7 @@ eksctl create iamserviceaccount \
     --region ap-south-1 \
     --name alb-ingress-controller \
     --namespace kube-system \
-    --cluster pop-stage \
+    --cluster test-stage \
     --attach-policy-arn arn:aws:iam::835518098452:policy/ALBIngressControllerIAMPolicy \
     --override-existing-serviceaccounts \
     --approve
@@ -142,14 +142,14 @@ eksctl delete iamserviceaccount \
     --region ap-south-1 \
     --name aws-load-balancer-controller \
     --namespace kube-system \
-    --cluster pop-stage \
+    --cluster test-stage \
    
 
 
 
 
 eksctl create iamserviceaccount \
---cluster=pop-stage \
+--cluster=test-stage \
 --namespace=kube-system \
 --name=aws-load-balancer-controller \
 --attach-policy-arn=arn:aws:iam::835518098452:policy/AWSLoadBalancerControllerIAMPolicy \
