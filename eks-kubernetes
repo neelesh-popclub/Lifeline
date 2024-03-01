@@ -1,0 +1,236 @@
+
+eksctl create cluster --name=stage \
+                      --region=ap-south-1 \
+                      --zones=ap-south-1a,ap-south-1b \
+                      --version=1.28 \
+                      --without-nodegroup 
+                      
+                      
+eksctl create cluster --name=prod \
+                      --region=ap-south-1 \
+                      --zones=ap-south-1a,ap-south-1b \
+                      --version=1.28 \
+                      --without-nodegroup                       
+
+
+eksctl delete cluster --name=my-cluster
+
+
+
+eksctl utils associate-iam-oidc-provider \
+    --region ap-south-1 \
+    --cluster stage \
+    --approve                      
+
+
+eksctl utils associate-iam-oidc-provider \
+    --region ap-south-1 \
+    --cluster prod \
+    --approve 
+
+
+eksctl create nodegroup --cluster=stage \
+                        --region=ap-south-1 \
+                        --name=pop-stage-nodegrp \
+                        --node-type=t3a.large \
+                        --nodes-min=2 \
+                        --nodes-max=6 \
+                        --node-volume-size=40 \
+                        --ssh-access \
+                        --ssh-public-key=pvt-k8s-access \
+                        --managed \
+                        --asg-access \
+                        --external-dns-access \
+                        --full-ecr-access \
+                        --appmesh-access \
+                        --alb-ingress-access \
+                        --node-private-networking                       
+
+
+eksctl create nodegroup --cluster=prod \
+                        --region=ap-south-1 \
+                        --name=pop-prod-nodegroup-private \
+                        --node-type=t3a.xlarge \
+                        --nodes-min=1 \
+                        --nodes-max=9 \
+                        --node-volume-size=50 \
+                        --ssh-access \
+                        --ssh-public-key=pvt-k8s-prod-access \
+                        --managed \
+                        --asg-access \
+                        --external-dns-access \
+                        --full-ecr-access \
+                        --appmesh-access \
+                        --alb-ingress-access \
+                        --node-private-networking  
+
+
+
+
+eksctl delete nodegroup --cluster=stage --name=stage-ng-private1
+
+eksctl scale nodegroup --cluster=stage --nodes=2 --name=stage-ng-private1  --nodes-min=2  --nodes-max=8 --wait
+
+
+# Deploy the Cluster Autoscaler to your cluster
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+
+
+
+# Add the cluster-autoscaler.kubernetes.io/safe-to-evict annotation to the deployment
+kubectl -n kube-system annotate deployment.apps/cluster-autoscaler cluster-autoscaler.kubernetes.io/safe-to-evict="false"
+
+
+# Add the cluster-autoscaler.kubernetes.io/safe-to-evict annotation to the deployment
+
+#Update Cluster Autoscaler Image Version
+kubectl -n kube-system set image deployment.apps/cluster-autoscaler cluster-autoscaler=us.gcr.io/k8s-artifacts-prod/autoscaling/cluster-autoscaler:v1.28.2
+
+#check logs for autoscaling
+kubectl -n kube-system logs -f deployment.apps/cluster-autoscaler
+
+kubectl scale deployment app-cart --replicas=50
+
+
+#installing metrix server in k8s cluster
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.4/components.yaml
+
+
+
+
+kubectl create secret docker-registry regcred --docker-server=https://index.docker.io/v1/ --docker-username=docker --docker-password=********** 
+
+kubectl create secret docker-registry regcred \
+  --docker-server=https://index.docker.io/v1/ \
+  --docker-username=your-dockerhub-username \
+  --docker-password=your-dockerhub-password \
+ 
+  
+  
+###################
+setup alb ingress controller 
+# get service accounts in kubernetes namespace
+kubectl get sa -n kube-system
+
+# create cluster rolebinding and role for alb
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/master/docs/examples/rbac-role.yaml
+
+# Create IAM Policy
+aws iam create-policy \
+    --policy-name ALBIngressControllerIAMPolicy \
+    --policy-document https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/main/docs/install/iam_policy.json
+    
+####### if this policy does not work create it manually and then copy the arn number of that policy
+arn:aws:iam::835518098452:policy/ALBIngressControllerIAMPolicy
+
+
+
+
+# Replaced region, name, cluster and policy arn (Policy arn we took note in step-03)
+eksctl create iamserviceaccount \
+    --region ap-south-1 \
+    --name alb-ingress-controller \
+    --namespace kube-system \
+    --cluster pop-stage \
+    --attach-policy-arn arn:aws:iam::835518098452:policy/ALBIngressControllerIAMPolicy \
+    --override-existing-serviceaccounts \
+    --approve
+
+# Replaced region, name, cluster and policy arn (Policy arn we took note in step-03)
+eksctl delete iamserviceaccount \
+    --region ap-south-1 \
+    --name aws-load-balancer-controller \
+    --namespace kube-system \
+    --cluster pop-stage \
+   
+
+
+
+
+eksctl create iamserviceaccount \
+--cluster=pop-stage \
+--namespace=kube-system \
+--name=aws-load-balancer-controller \
+--attach-policy-arn=arn:aws:iam::835518098452:policy/AWSLoadBalancerControllerIAMPolicy \
+--override-existing-serviceaccounts \
+--region ap-south-1 \
+--approve
+
+
+
+
+    
+# Get IAM Service Account
+eksctl  get iamserviceaccount --cluster stage
+
+# Describe Service Account alb-ingress-controller 
+kubectl describe sa alb-ingress-controller -n system
+
+
+#deploy ingress controller
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/master/docs/examples/alb-ingress-controller.yaml
+
+# check if it is deployed or not
+kubectl get deploy -n kube-system
+
+
+
+kubectl edit configmap aws-auth -n kube-system
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: v1
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::*********:user/abc@abc
+      username: abc@abc
+      groups:
+      - system:masters
+    - groups:
+      - system:bootstrappers
+      - system:nodes
+      rolearn: arn:aws:iam:**************NodeInstanceRole-2dlrnmNZo0nE
+      username: system:node:{{EC2PrivateDNSName}}
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2024-01-02T19:03:01Z"
+  name: aws-auth
+  namespace: kube-system
+  resourceVersion: "1517498"
+  uid: f0b71b9b-066d-46aa-b087-c622e1f88a7f
+
+
+
+
+
+
+
+curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.6.1/docs/install/iam_policy.json
+
+
+
+eksctl create iamserviceaccount \
+--cluster=prod \
+--namespace=kube-system \
+--name=aws-load-balancer-controller \
+--attach-policy-arn=arn:aws:iam::**************:policy/AWSLoadBalancerControllerIAMPolicy \
+--override-existing-serviceaccounts \
+--region ap-south-1 \
+--approve
+
+
+
+
+
+
+
+# Template
+curl -s https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/quickstart/cwagent-fluentd-quickstart.yaml | sed "s/{{cluster_name}}/<REPLACE_CLUSTER_NAME>/;s/{{region_name}}/<REPLACE-AWS_REGION>/" | kubectl apply -f -
+
+# Replaced Cluster Name and Region
+curl -s https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/quickstart/cwagent-fluentd-quickstart.yaml | sed "s/{{cluster_name}}/eksdemo1/;s/{{region_name}}/us-east-1/" | kubectl apply -f -
+
+ 
