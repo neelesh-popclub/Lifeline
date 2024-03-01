@@ -95,8 +95,9 @@ kubectl scale deployment app-cart --replicas=50
 
 #installing metrix server in k8s cluster
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.4/components.yaml
+###############################################################################################################################################
 
-
+Create docker hub secrets on k8s cluster
 
 
 kubectl create secret docker-registry regcred --docker-server=https://index.docker.io/v1/ --docker-username=docker --docker-password=********** 
